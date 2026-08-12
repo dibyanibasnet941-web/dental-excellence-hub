@@ -11,9 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicBrandsIndexRouteImport } from './routes/_public/brands.index'
+import { Route as PublicBrandsSlugRouteImport } from './routes/_public/brands.$slug'
 import { Route as PublicCategoriesSlugRouteImport } from './routes/_public/categories.$slug'
 import { Route as PublicProductsIndexRouteImport } from './routes/_public/products.index'
 import { Route as PublicProductsSlugRouteImport } from './routes/_public/products.$slug'
+import { Route as PublicSolutionsIndexRouteImport } from './routes/_public/solutions.index'
+import { Route as PublicSolutionsSlugRouteImport } from './routes/_public/solutions.$slug'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
@@ -22,6 +26,16 @@ const PublicRouteRoute = PublicRouteRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicBrandsIndexRoute = PublicBrandsIndexRouteImport.update({
+  id: '/brands/',
+  path: '/brands/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicBrandsSlugRoute = PublicBrandsSlugRouteImport.update({
+  id: '/brands/$slug',
+  path: '/brands/$slug',
   getParentRoute: () => PublicRouteRoute,
 } as any)
 const PublicCategoriesSlugRoute = PublicCategoriesSlugRouteImport.update({
@@ -39,39 +53,81 @@ const PublicProductsSlugRoute = PublicProductsSlugRouteImport.update({
   path: '/products/$slug',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const PublicSolutionsIndexRoute = PublicSolutionsIndexRouteImport.update({
+  id: '/solutions/',
+  path: '/solutions/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicSolutionsSlugRoute = PublicSolutionsSlugRouteImport.update({
+  id: '/solutions/$slug',
+  path: '/solutions/$slug',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
   '/products/$slug': typeof PublicProductsSlugRoute
+  '/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/brands/': typeof PublicBrandsIndexRoute
   '/products/': typeof PublicProductsIndexRoute
+  '/solutions/': typeof PublicSolutionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
+  '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
   '/products/$slug': typeof PublicProductsSlugRoute
+  '/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/brands': typeof PublicBrandsIndexRoute
   '/products': typeof PublicProductsIndexRoute
+  '/solutions': typeof PublicSolutionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteRouteWithChildren
   '/_public/': typeof PublicIndexRoute
+  '/_public/brands/$slug': typeof PublicBrandsSlugRoute
   '/_public/categories/$slug': typeof PublicCategoriesSlugRoute
   '/_public/products/$slug': typeof PublicProductsSlugRoute
+  '/_public/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/_public/brands/': typeof PublicBrandsIndexRoute
   '/_public/products/': typeof PublicProductsIndexRoute
+  '/_public/solutions/': typeof PublicSolutionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/categories/$slug' | '/products/$slug' | '/products/'
+  fullPaths:
+    | '/'
+    | '/brands/$slug'
+    | '/categories/$slug'
+    | '/products/$slug'
+    | '/solutions/$slug'
+    | '/brands/'
+    | '/products/'
+    | '/solutions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categories/$slug' | '/products/$slug' | '/products'
+  to:
+    | '/'
+    | '/brands/$slug'
+    | '/categories/$slug'
+    | '/products/$slug'
+    | '/solutions/$slug'
+    | '/brands'
+    | '/products'
+    | '/solutions'
   id:
     | '__root__'
     | '/_public'
     | '/_public/'
+    | '/_public/brands/$slug'
     | '/_public/categories/$slug'
     | '/_public/products/$slug'
+    | '/_public/solutions/$slug'
+    | '/_public/brands/'
     | '/_public/products/'
+    | '/_public/solutions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,6 +148,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/brands/': {
+      id: '/_public/brands/'
+      path: '/brands'
+      fullPath: '/brands/'
+      preLoaderRoute: typeof PublicBrandsIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/brands/$slug': {
+      id: '/_public/brands/$slug'
+      path: '/brands/$slug'
+      fullPath: '/brands/$slug'
+      preLoaderRoute: typeof PublicBrandsSlugRouteImport
       parentRoute: typeof PublicRouteRoute
     }
     '/_public/categories/$slug': {
@@ -115,21 +185,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicProductsSlugRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/_public/solutions/': {
+      id: '/_public/solutions/'
+      path: '/solutions'
+      fullPath: '/solutions/'
+      preLoaderRoute: typeof PublicSolutionsIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/solutions/$slug': {
+      id: '/_public/solutions/$slug'
+      path: '/solutions/$slug'
+      fullPath: '/solutions/$slug'
+      preLoaderRoute: typeof PublicSolutionsSlugRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
   }
 }
 
 interface PublicRouteRouteChildren {
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicBrandsSlugRoute: typeof PublicBrandsSlugRoute
   PublicCategoriesSlugRoute: typeof PublicCategoriesSlugRoute
   PublicProductsSlugRoute: typeof PublicProductsSlugRoute
+  PublicSolutionsSlugRoute: typeof PublicSolutionsSlugRoute
+  PublicBrandsIndexRoute: typeof PublicBrandsIndexRoute
   PublicProductsIndexRoute: typeof PublicProductsIndexRoute
+  PublicSolutionsIndexRoute: typeof PublicSolutionsIndexRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicIndexRoute: PublicIndexRoute,
+  PublicBrandsSlugRoute: PublicBrandsSlugRoute,
   PublicCategoriesSlugRoute: PublicCategoriesSlugRoute,
   PublicProductsSlugRoute: PublicProductsSlugRoute,
+  PublicSolutionsSlugRoute: PublicSolutionsSlugRoute,
+  PublicBrandsIndexRoute: PublicBrandsIndexRoute,
   PublicProductsIndexRoute: PublicProductsIndexRoute,
+  PublicSolutionsIndexRoute: PublicSolutionsIndexRoute,
 }
 
 const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
