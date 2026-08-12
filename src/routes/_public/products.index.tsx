@@ -23,7 +23,7 @@ import { AVAILABILITY_OPTIONS } from "@/lib/site";
 
 type Search = { q?: string; category?: string; brand?: string; page?: number };
 
-export const Route = createFileRoute("/_public/products")({
+export const Route = createFileRoute("/_public/products/")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     q: typeof search["q"] === "string" ? search["q"] : undefined,
     category: typeof search["category"] === "string" ? search["category"] : undefined,
