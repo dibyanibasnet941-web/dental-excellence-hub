@@ -12,8 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
+import { Route as PublicContactRouteImport } from './routes/_public/contact'
+import { Route as PublicPrivacyPolicyRouteImport } from './routes/_public/privacy-policy'
 import { Route as PublicResourcesRouteImport } from './routes/_public/resources'
 import { Route as PublicServicesRouteImport } from './routes/_public/services'
+import { Route as PublicTermsRouteImport } from './routes/_public/terms'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public/blog.index'
 import { Route as PublicBlogSlugRouteImport } from './routes/_public/blog.$slug'
 import { Route as PublicBrandsIndexRouteImport } from './routes/_public/brands.index'
@@ -38,6 +41,16 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const PublicContactRoute = PublicContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicPrivacyPolicyRoute = PublicPrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 const PublicResourcesRoute = PublicResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
@@ -46,6 +59,11 @@ const PublicResourcesRoute = PublicResourcesRouteImport.update({
 const PublicServicesRoute = PublicServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicTermsRoute = PublicTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => PublicRouteRoute,
 } as any)
 const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
@@ -97,8 +115,11 @@ const PublicSolutionsSlugRoute = PublicSolutionsSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/about': typeof PublicAboutRoute
+  '/contact': typeof PublicContactRoute
+  '/privacy-policy': typeof PublicPrivacyPolicyRoute
   '/resources': typeof PublicResourcesRoute
   '/services': typeof PublicServicesRoute
+  '/terms': typeof PublicTermsRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
@@ -111,8 +132,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/about': typeof PublicAboutRoute
+  '/contact': typeof PublicContactRoute
+  '/privacy-policy': typeof PublicPrivacyPolicyRoute
   '/resources': typeof PublicResourcesRoute
   '/services': typeof PublicServicesRoute
+  '/terms': typeof PublicTermsRoute
   '/': typeof PublicIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/brands/$slug': typeof PublicBrandsSlugRoute
@@ -128,8 +152,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteRouteWithChildren
   '/_public/about': typeof PublicAboutRoute
+  '/_public/contact': typeof PublicContactRoute
+  '/_public/privacy-policy': typeof PublicPrivacyPolicyRoute
   '/_public/resources': typeof PublicResourcesRoute
   '/_public/services': typeof PublicServicesRoute
+  '/_public/terms': typeof PublicTermsRoute
   '/_public/': typeof PublicIndexRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
   '/_public/brands/$slug': typeof PublicBrandsSlugRoute
@@ -146,8 +173,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/contact'
+    | '/privacy-policy'
     | '/resources'
     | '/services'
+    | '/terms'
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
@@ -160,8 +190,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
+    | '/contact'
+    | '/privacy-policy'
     | '/resources'
     | '/services'
+    | '/terms'
     | '/'
     | '/blog/$slug'
     | '/brands/$slug'
@@ -176,8 +209,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_public'
     | '/_public/about'
+    | '/_public/contact'
+    | '/_public/privacy-policy'
     | '/_public/resources'
     | '/_public/services'
+    | '/_public/terms'
     | '/_public/'
     | '/_public/blog/$slug'
     | '/_public/brands/$slug'
@@ -217,6 +253,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/_public/contact': {
+      id: '/_public/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof PublicContactRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/privacy-policy': {
+      id: '/_public/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PublicPrivacyPolicyRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
     '/_public/resources': {
       id: '/_public/resources'
       path: '/resources'
@@ -229,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof PublicServicesRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/terms': {
+      id: '/_public/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof PublicTermsRouteImport
       parentRoute: typeof PublicRouteRoute
     }
     '/_public/blog/': {
@@ -299,8 +356,11 @@ declare module '@tanstack/react-router' {
 
 interface PublicRouteRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
+  PublicContactRoute: typeof PublicContactRoute
+  PublicPrivacyPolicyRoute: typeof PublicPrivacyPolicyRoute
   PublicResourcesRoute: typeof PublicResourcesRoute
   PublicServicesRoute: typeof PublicServicesRoute
+  PublicTermsRoute: typeof PublicTermsRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicBlogSlugRoute: typeof PublicBlogSlugRoute
   PublicBrandsSlugRoute: typeof PublicBrandsSlugRoute
@@ -315,8 +375,11 @@ interface PublicRouteRouteChildren {
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicAboutRoute: PublicAboutRoute,
+  PublicContactRoute: PublicContactRoute,
+  PublicPrivacyPolicyRoute: PublicPrivacyPolicyRoute,
   PublicResourcesRoute: PublicResourcesRoute,
   PublicServicesRoute: PublicServicesRoute,
+  PublicTermsRoute: PublicTermsRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicBlogSlugRoute: PublicBlogSlugRoute,
   PublicBrandsSlugRoute: PublicBrandsSlugRoute,
