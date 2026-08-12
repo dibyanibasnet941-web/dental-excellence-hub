@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicAboutRouteImport } from './routes/_public/about'
+import { Route as PublicResourcesRouteImport } from './routes/_public/resources'
+import { Route as PublicServicesRouteImport } from './routes/_public/services'
+import { Route as PublicBlogIndexRouteImport } from './routes/_public/blog.index'
+import { Route as PublicBlogSlugRouteImport } from './routes/_public/blog.$slug'
 import { Route as PublicBrandsIndexRouteImport } from './routes/_public/brands.index'
 import { Route as PublicBrandsSlugRouteImport } from './routes/_public/brands.$slug'
 import { Route as PublicCategoriesSlugRouteImport } from './routes/_public/categories.$slug'
@@ -26,6 +31,31 @@ const PublicRouteRoute = PublicRouteRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicAboutRoute = PublicAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicResourcesRoute = PublicResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicServicesRoute = PublicServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const PublicBlogSlugRoute = PublicBlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => PublicRouteRoute,
 } as any)
 const PublicBrandsIndexRoute = PublicBrandsIndexRouteImport.update({
@@ -66,20 +96,30 @@ const PublicSolutionsSlugRoute = PublicSolutionsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/about': typeof PublicAboutRoute
+  '/resources': typeof PublicResourcesRoute
+  '/services': typeof PublicServicesRoute
+  '/blog/$slug': typeof PublicBlogSlugRoute
   '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
   '/products/$slug': typeof PublicProductsSlugRoute
   '/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/blog/': typeof PublicBlogIndexRoute
   '/brands/': typeof PublicBrandsIndexRoute
   '/products/': typeof PublicProductsIndexRoute
   '/solutions/': typeof PublicSolutionsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/about': typeof PublicAboutRoute
+  '/resources': typeof PublicResourcesRoute
+  '/services': typeof PublicServicesRoute
   '/': typeof PublicIndexRoute
+  '/blog/$slug': typeof PublicBlogSlugRoute
   '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
   '/products/$slug': typeof PublicProductsSlugRoute
   '/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/blog': typeof PublicBlogIndexRoute
   '/brands': typeof PublicBrandsIndexRoute
   '/products': typeof PublicProductsIndexRoute
   '/solutions': typeof PublicSolutionsIndexRoute
@@ -87,11 +127,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteRouteWithChildren
+  '/_public/about': typeof PublicAboutRoute
+  '/_public/resources': typeof PublicResourcesRoute
+  '/_public/services': typeof PublicServicesRoute
   '/_public/': typeof PublicIndexRoute
+  '/_public/blog/$slug': typeof PublicBlogSlugRoute
   '/_public/brands/$slug': typeof PublicBrandsSlugRoute
   '/_public/categories/$slug': typeof PublicCategoriesSlugRoute
   '/_public/products/$slug': typeof PublicProductsSlugRoute
   '/_public/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/brands/': typeof PublicBrandsIndexRoute
   '/_public/products/': typeof PublicProductsIndexRoute
   '/_public/solutions/': typeof PublicSolutionsIndexRoute
@@ -100,31 +145,46 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/resources'
+    | '/services'
+    | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
     | '/products/$slug'
     | '/solutions/$slug'
+    | '/blog/'
     | '/brands/'
     | '/products/'
     | '/solutions/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/about'
+    | '/resources'
+    | '/services'
     | '/'
+    | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
     | '/products/$slug'
     | '/solutions/$slug'
+    | '/blog'
     | '/brands'
     | '/products'
     | '/solutions'
   id:
     | '__root__'
     | '/_public'
+    | '/_public/about'
+    | '/_public/resources'
+    | '/_public/services'
     | '/_public/'
+    | '/_public/blog/$slug'
     | '/_public/brands/$slug'
     | '/_public/categories/$slug'
     | '/_public/products/$slug'
     | '/_public/solutions/$slug'
+    | '/_public/blog/'
     | '/_public/brands/'
     | '/_public/products/'
     | '/_public/solutions/'
@@ -148,6 +208,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/about': {
+      id: '/_public/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof PublicAboutRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/resources': {
+      id: '/_public/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof PublicResourcesRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/services': {
+      id: '/_public/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof PublicServicesRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/blog/': {
+      id: '/_public/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof PublicBlogIndexRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_public/blog/$slug': {
+      id: '/_public/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof PublicBlogSlugRouteImport
       parentRoute: typeof PublicRouteRoute
     }
     '/_public/brands/': {
@@ -203,22 +298,32 @@ declare module '@tanstack/react-router' {
 }
 
 interface PublicRouteRouteChildren {
+  PublicAboutRoute: typeof PublicAboutRoute
+  PublicResourcesRoute: typeof PublicResourcesRoute
+  PublicServicesRoute: typeof PublicServicesRoute
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicBlogSlugRoute: typeof PublicBlogSlugRoute
   PublicBrandsSlugRoute: typeof PublicBrandsSlugRoute
   PublicCategoriesSlugRoute: typeof PublicCategoriesSlugRoute
   PublicProductsSlugRoute: typeof PublicProductsSlugRoute
   PublicSolutionsSlugRoute: typeof PublicSolutionsSlugRoute
+  PublicBlogIndexRoute: typeof PublicBlogIndexRoute
   PublicBrandsIndexRoute: typeof PublicBrandsIndexRoute
   PublicProductsIndexRoute: typeof PublicProductsIndexRoute
   PublicSolutionsIndexRoute: typeof PublicSolutionsIndexRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
+  PublicAboutRoute: PublicAboutRoute,
+  PublicResourcesRoute: PublicResourcesRoute,
+  PublicServicesRoute: PublicServicesRoute,
   PublicIndexRoute: PublicIndexRoute,
+  PublicBlogSlugRoute: PublicBlogSlugRoute,
   PublicBrandsSlugRoute: PublicBrandsSlugRoute,
   PublicCategoriesSlugRoute: PublicCategoriesSlugRoute,
   PublicProductsSlugRoute: PublicProductsSlugRoute,
   PublicSolutionsSlugRoute: PublicSolutionsSlugRoute,
+  PublicBlogIndexRoute: PublicBlogIndexRoute,
   PublicBrandsIndexRoute: PublicBrandsIndexRoute,
   PublicProductsIndexRoute: PublicProductsIndexRoute,
   PublicSolutionsIndexRoute: PublicSolutionsIndexRoute,
