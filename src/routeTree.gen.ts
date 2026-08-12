@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
 import { Route as PublicContactRouteImport } from './routes/_public/contact'
@@ -18,6 +20,7 @@ import { Route as PublicPrivacyPolicyRouteImport } from './routes/_public/privac
 import { Route as PublicResourcesRouteImport } from './routes/_public/resources'
 import { Route as PublicServicesRouteImport } from './routes/_public/services'
 import { Route as PublicTermsRouteImport } from './routes/_public/terms'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public/blog.index'
 import { Route as PublicBlogSlugRouteImport } from './routes/_public/blog.$slug'
 import { Route as PublicBrandsIndexRouteImport } from './routes/_public/brands.index'
@@ -28,6 +31,10 @@ import { Route as PublicProductsSlugRouteImport } from './routes/_public/product
 import { Route as PublicSolutionsIndexRouteImport } from './routes/_public/solutions.index'
 import { Route as PublicSolutionsSlugRouteImport } from './routes/_public/solutions.$slug'
 
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
   getParentRoute: () => rootRouteImport,
@@ -36,6 +43,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
@@ -71,6 +83,11 @@ const PublicTermsRoute = PublicTermsRouteImport.update({
   id: '/terms',
   path: '/terms',
   getParentRoute: () => PublicRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
   id: '/blog/',
@@ -121,6 +138,7 @@ const PublicSolutionsSlugRoute = PublicSolutionsSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
   '/privacy-policy': typeof PublicPrivacyPolicyRoute
@@ -132,12 +150,14 @@ export interface FileRoutesByFullPath {
   '/categories/$slug': typeof PublicCategoriesSlugRoute
   '/products/$slug': typeof PublicProductsSlugRoute
   '/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/blog/': typeof PublicBlogIndexRoute
   '/brands/': typeof PublicBrandsIndexRoute
   '/products/': typeof PublicProductsIndexRoute
   '/solutions/': typeof PublicSolutionsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
@@ -145,12 +165,12 @@ export interface FileRoutesByTo {
   '/resources': typeof PublicResourcesRoute
   '/services': typeof PublicServicesRoute
   '/terms': typeof PublicTermsRoute
-  '/': typeof PublicIndexRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
   '/products/$slug': typeof PublicProductsSlugRoute
   '/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/blog': typeof PublicBlogIndexRoute
   '/brands': typeof PublicBrandsIndexRoute
   '/products': typeof PublicProductsIndexRoute
@@ -158,8 +178,10 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_public/about': typeof PublicAboutRoute
   '/_public/contact': typeof PublicContactRoute
   '/_public/privacy-policy': typeof PublicPrivacyPolicyRoute
@@ -172,6 +194,7 @@ export interface FileRoutesById {
   '/_public/categories/$slug': typeof PublicCategoriesSlugRoute
   '/_public/products/$slug': typeof PublicProductsSlugRoute
   '/_public/solutions/$slug': typeof PublicSolutionsSlugRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/brands/': typeof PublicBrandsIndexRoute
   '/_public/products/': typeof PublicProductsIndexRoute
@@ -182,6 +205,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/admin'
     | '/about'
     | '/contact'
     | '/privacy-policy'
@@ -193,12 +217,14 @@ export interface FileRouteTypes {
     | '/categories/$slug'
     | '/products/$slug'
     | '/solutions/$slug'
+    | '/admin/'
     | '/blog/'
     | '/brands/'
     | '/products/'
     | '/solutions/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/auth'
     | '/about'
     | '/contact'
@@ -206,20 +232,22 @@ export interface FileRouteTypes {
     | '/resources'
     | '/services'
     | '/terms'
-    | '/'
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
     | '/products/$slug'
     | '/solutions/$slug'
+    | '/admin'
     | '/blog'
     | '/brands'
     | '/products'
     | '/solutions'
   id:
     | '__root__'
+    | '/_authenticated'
     | '/_public'
     | '/auth'
+    | '/_authenticated/admin'
     | '/_public/about'
     | '/_public/contact'
     | '/_public/privacy-policy'
@@ -232,6 +260,7 @@ export interface FileRouteTypes {
     | '/_public/categories/$slug'
     | '/_public/products/$slug'
     | '/_public/solutions/$slug'
+    | '/_authenticated/admin/'
     | '/_public/blog/'
     | '/_public/brands/'
     | '/_public/products/'
@@ -239,12 +268,20 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public': {
       id: '/_public'
       path: ''
@@ -258,6 +295,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_public/': {
       id: '/_public/'
@@ -307,6 +351,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/terms'
       preLoaderRoute: typeof PublicTermsRouteImport
       parentRoute: typeof PublicRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_public/blog/': {
       id: '/_public/blog/'
@@ -374,6 +425,28 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 interface PublicRouteRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
   PublicContactRoute: typeof PublicContactRoute
@@ -417,6 +490,7 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
   AuthRoute: AuthRoute,
 }

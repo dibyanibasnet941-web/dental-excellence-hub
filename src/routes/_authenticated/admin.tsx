@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
-const links = [
+const links: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/products", label: "Products", icon: Boxes },
   { to: "/admin/categories", label: "Categories", icon: Tag },
@@ -29,7 +29,7 @@ const links = [
   { to: "/admin/resources", label: "Resources", icon: FileText },
   { to: "/admin/services", label: "Services & Solutions", icon: Wrench },
   { to: "/admin/content", label: "Website Content", icon: Settings },
-] as const;
+];
 
 function AdminLayout() {
   const { isStaff, loading, user } = useAuth();
@@ -54,7 +54,7 @@ function AdminLayout() {
             variant="outline"
             onClick={async () => {
               await supabase.auth.signOut();
-              void navigate({ to: "/auth" });
+              void navigate({ to: "/auth", search: { redirect: undefined } });
             }}
           >
             Sign out
@@ -101,7 +101,7 @@ function AdminLayout() {
           <button
             onClick={async () => {
               await supabase.auth.signOut();
-              void navigate({ to: "/auth" });
+              void navigate({ to: "/auth", search: { redirect: undefined } });
             }}
             className="flex w-full items-center gap-3 rounded-sm px-3 py-2 text-sm hover:bg-sidebar-accent"
           >
