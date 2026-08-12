@@ -21,7 +21,12 @@ import {
 import { brandsQuery, categoriesQuery, productsQuery } from "@/lib/queries";
 import { AVAILABILITY_OPTIONS } from "@/lib/site";
 
-type Search = { q?: string; category?: string; brand?: string; page?: number };
+type Search = {
+  q?: string | undefined;
+  category?: string | undefined;
+  brand?: string | undefined;
+  page?: number | undefined;
+};
 
 export const Route = createFileRoute("/_public/products/")({
   validateSearch: (search: Record<string, unknown>): Search => ({

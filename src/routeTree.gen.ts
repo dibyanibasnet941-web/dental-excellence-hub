@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicCategoriesSlugRouteImport } from './routes/_public/categories.$slug'
 import { Route as PublicProductsIndexRouteImport } from './routes/_public/products.index'
+import { Route as PublicProductsSlugRouteImport } from './routes/_public/products.$slug'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
@@ -22,32 +24,54 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const PublicCategoriesSlugRoute = PublicCategoriesSlugRouteImport.update({
+  id: '/categories/$slug',
+  path: '/categories/$slug',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 const PublicProductsIndexRoute = PublicProductsIndexRouteImport.update({
   id: '/products/',
   path: '/products/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
+const PublicProductsSlugRoute = PublicProductsSlugRouteImport.update({
+  id: '/products/$slug',
+  path: '/products/$slug',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/categories/$slug': typeof PublicCategoriesSlugRoute
+  '/products/$slug': typeof PublicProductsSlugRoute
   '/products/': typeof PublicProductsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
+  '/categories/$slug': typeof PublicCategoriesSlugRoute
+  '/products/$slug': typeof PublicProductsSlugRoute
   '/products': typeof PublicProductsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteRouteWithChildren
   '/_public/': typeof PublicIndexRoute
+  '/_public/categories/$slug': typeof PublicCategoriesSlugRoute
+  '/_public/products/$slug': typeof PublicProductsSlugRoute
   '/_public/products/': typeof PublicProductsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/products/'
+  fullPaths: '/' | '/categories/$slug' | '/products/$slug' | '/products/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/products'
-  id: '__root__' | '/_public' | '/_public/' | '/_public/products/'
+  to: '/' | '/categories/$slug' | '/products/$slug' | '/products'
+  id:
+    | '__root__'
+    | '/_public'
+    | '/_public/'
+    | '/_public/categories/$slug'
+    | '/_public/products/$slug'
+    | '/_public/products/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -70,6 +94,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/_public/categories/$slug': {
+      id: '/_public/categories/$slug'
+      path: '/categories/$slug'
+      fullPath: '/categories/$slug'
+      preLoaderRoute: typeof PublicCategoriesSlugRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
     '/_public/products/': {
       id: '/_public/products/'
       path: '/products'
@@ -77,16 +108,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicProductsIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
+    '/_public/products/$slug': {
+      id: '/_public/products/$slug'
+      path: '/products/$slug'
+      fullPath: '/products/$slug'
+      preLoaderRoute: typeof PublicProductsSlugRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
   }
 }
 
 interface PublicRouteRouteChildren {
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicCategoriesSlugRoute: typeof PublicCategoriesSlugRoute
+  PublicProductsSlugRoute: typeof PublicProductsSlugRoute
   PublicProductsIndexRoute: typeof PublicProductsIndexRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicIndexRoute: PublicIndexRoute,
+  PublicCategoriesSlugRoute: PublicCategoriesSlugRoute,
+  PublicProductsSlugRoute: PublicProductsSlugRoute,
   PublicProductsIndexRoute: PublicProductsIndexRoute,
 }
 
