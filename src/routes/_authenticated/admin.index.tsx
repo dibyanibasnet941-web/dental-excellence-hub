@@ -61,7 +61,7 @@ function Dashboard() {
       <div className="mt-10 rounded-md border border-border bg-card">
         <div className="flex items-center justify-between border-b border-border p-5">
           <h2 className="font-semibold">Latest enquiries</h2>
-          <Link to="/admin/enquiries" className="text-sm text-accent">
+          <Link to={"/admin/enquiries" as never} className="text-sm text-accent">
             View all
           </Link>
         </div>

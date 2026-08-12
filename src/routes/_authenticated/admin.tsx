@@ -79,7 +79,7 @@ function AdminLayout() {
             return (
               <Link
                 key={link.to}
-                to={link.to}
+                to={link.to as never}
                 className={cn(
                   "flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition-colors hover:bg-sidebar-accent",
                   active && "bg-sidebar-accent text-sidebar-accent-foreground",
@@ -116,7 +116,7 @@ function AdminLayout() {
           {links.map((link) => (
             <Link
               key={link.to}
-              to={link.to}
+              to={link.to as never}
               className="whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium text-muted-foreground"
             >
               {link.label}
