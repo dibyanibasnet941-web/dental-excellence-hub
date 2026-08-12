@@ -44,7 +44,13 @@ export function EnquiryDialog({
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof schema>) => {
       const { error } = await supabase.from("enquiries").insert({
-        ...values,
+        name: values.name,
+        email: values.email,
+        organization: values.organization ?? null,
+        phone: values.phone ?? null,
+        location: values.location ?? null,
+        quantity: values.quantity ?? null,
+        message: values.message ?? null,
         product_id: productId ?? null,
         product_name: values.product_name || productName || null,
         status: "New",
@@ -101,18 +107,18 @@ export function EnquiryDialog({
             </DialogHeader>
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Name" name="name" required error={errors.name} />
-                <Field label="Organization / Clinic" name="organization" error={errors.organization} />
-                <Field label="Email" name="email" type="email" required error={errors.email} />
-                <Field label="Phone" name="phone" error={errors.phone} />
-                <Field label="Location" name="location" error={errors.location} />
-                <Field label="Quantity" name="quantity" error={errors.quantity} />
+                <Field label="Name" name="name" required error={errors["name"]} />
+                <Field label="Organization / Clinic" name="organization" error={errors["organization"]} />
+                <Field label="Email" name="email" type="email" required error={errors["email"]} />
+                <Field label="Phone" name="phone" error={errors["phone"]} />
+                <Field label="Location" name="location" error={errors["location"]} />
+                <Field label="Quantity" name="quantity" error={errors["quantity"]} />
               </div>
               <Field
                 label="Product"
                 name="product_name"
                 defaultValue={productName ?? ""}
-                error={errors.product_name}
+                error={errors["product_name"]}
               />
               <div className="space-y-1.5">
                 <Label htmlFor="enquiry-message">Message</Label>
@@ -139,10 +145,10 @@ function Field({
 }: {
   label: string;
   name: string;
-  type?: string;
-  required?: boolean;
-  defaultValue?: string;
-  error?: string;
+  type?: string | undefined;
+  required?: boolean | undefined;
+  defaultValue?: string | undefined;
+  error?: string | undefined;
 }) {
   return (
     <div className="space-y-1.5">
