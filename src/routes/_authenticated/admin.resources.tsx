@@ -7,18 +7,31 @@ export const Route = createFileRoute("/_authenticated/admin/resources")({
       table="resources"
       title="Resources"
       description="Catalogues, brochures and downloadable documents."
-      queryKey={["admin","resources"]}
+      queryKey={["admin", "resources"]}
       fields={[
         { name: "title", label: "Title", type: "text" },
+        { name: "slug", label: "Slug", type: "slug", sourceField: "title" },
         { name: "description", label: "Description", type: "textarea" },
+        {
+          name: "resource_type",
+          label: "Type",
+          type: "select",
+          options: [
+            { value: "brochure", label: "Brochure" },
+            { value: "catalogue", label: "Catalogue" },
+            { value: "guide", label: "Guide" },
+            { value: "video", label: "Video" },
+          ],
+        },
         { name: "file_url", label: "File URL", type: "text" },
-        { name: "resource_type", label: "Type", type: "text" },
-        { name: "is_active", label: "Published", type: "boolean" },
+        { name: "video_url", label: "Video URL", type: "text" },
+        { name: "thumbnail_url", label: "Thumbnail URL", type: "text", full: true },
+        { name: "is_published", label: "Published", type: "boolean" },
       ]}
       columns={[
         { name: "title", label: "Title" },
         { name: "resource_type", label: "Type" },
-        { name: "is_active", label: "Published" },
+        { name: "is_published", label: "Published" },
       ]}
     />
   ),
