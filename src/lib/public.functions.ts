@@ -5,11 +5,12 @@ import type { Database } from "@/integrations/supabase/types";
 
 function publicClient() {
   return createClient<Database>(
-    process.env["SUPABASE_URL"]!,
-    process.env["SUPABASE_PUBLISHABLE_KEY"]!,
+    "https://bcnolnjsrkonvgsnepfv.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJjbm9sbmpzcmtvbnZnc25lcGZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY1MjczMjgsImV4cCI6MjEwMjEwMzMyOH0.u4MIxT0GgEQ1ZSv3hQnwYShjThRHMs3nIbuOY_d8dR8",
     { auth: { persistSession: false, autoRefreshToken: false } },
   );
 }
+
 
 const slugInput = (data: unknown) => z.object({ slug: z.string().max(200) }).parse(data);
 
