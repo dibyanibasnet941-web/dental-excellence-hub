@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/app-client";
 import { enquiriesQuery } from "@/lib/queries";
 import { ENQUIRY_STATUSES } from "@/lib/site";
 import { formatDate } from "@/lib/site";
