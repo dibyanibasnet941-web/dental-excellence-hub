@@ -60,17 +60,6 @@ function AuthPage() {
     }
   };
 
-  const handleGoogle = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      toast.error("Google sign-in failed. Please try again.");
-      return;
-    }
-    if (result.redirected) return;
-    void navigate({ to: target });
-  };
 
   return (
     <div className="flex min-h-screen items-center justify-center surface-panel px-5 py-16">
@@ -112,14 +101,6 @@ function AuthPage() {
           </TabsContent>
         </Tabs>
 
-        <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="h-px flex-1 bg-border" />
-          or
-          <span className="h-px flex-1 bg-border" />
-        </div>
-        <Button variant="outline" className="w-full" onClick={handleGoogle}>
-          Continue with Google
-        </Button>
 
         <p className="mt-6 text-xs text-muted-foreground">
           Dashboard access is granted by an administrator. New accounts need a staff or admin role
