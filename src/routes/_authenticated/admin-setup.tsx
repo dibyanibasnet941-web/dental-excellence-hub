@@ -24,6 +24,8 @@ function AdminSetup() {
   const [status, setStatus] = useState<Status | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [justGranted, setJustGranted] = useState(false);
 
   const token = async () => {
     const { data } = await supabase.auth.getSession();
@@ -32,29 +34,38 @@ function AdminSetup() {
     return accessToken;
   };
 
+  const refresh = async () => {
+    setChecking(true);
+    try {
+      const result = await getAdminSetupStatus({ data: { accessToken: await token() } });
+      setStatus(result);
+      setError(null);
+      return result;
+    } catch (err) {
+      setError((err as Error).message);
+      return null;
+    } finally {
+      setChecking(false);
+    }
+  };
+
   useEffect(() => {
-    let active = true;
-    void (async () => {
-      try {
-        const result = await getAdminSetupStatus({ data: { accessToken: await token() } });
-        if (active) setStatus(result);
-      } catch (err) {
-        if (active) setError((err as Error).message);
-      }
-    })();
-    return () => {
-      active = false;
-    };
+    void refresh();
   }, []);
 
   const claim = async () => {
     setBusy(true);
     try {
       await claimAdminRole({ data: { accessToken: await token() } });
-      toast.success("Admin access granted.");
-      // Refresh role state held by the client before entering the dashboard.
+      // Refresh role state held by the client, then re-verify server-side.
       await supabase.auth.refreshSession();
-      void navigate({ to: "/admin" as never });
+      const result = await refresh();
+      if (result?.isAdmin) {
+        setJustGranted(true);
+        toast.success("Admin role confirmed for your account.");
+      } else {
+        toast.error("The role was not confirmed. Try the status check again.");
+      }
     } catch (err) {
       toast.error((err as Error).message);
       setError((err as Error).message);
