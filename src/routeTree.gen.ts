@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminEnquiriesRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
 import { Route as AuthenticatedAdminResourcesRouteImport } from './routes/_authenticated/admin.resources'
 import { Route as AuthenticatedAdminServicesRouteImport } from './routes/_authenticated/admin.services'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public/blog.index'
 import { Route as PublicBlogSlugRouteImport } from './routes/_public/blog.$slug'
 import { Route as PublicBrandsIndexRouteImport } from './routes/_public/brands.index'
@@ -150,6 +151,11 @@ const AuthenticatedAdminServicesRoute =
     path: '/services',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const PublicBlogIndexRoute = PublicBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/resources': typeof AuthenticatedAdminResourcesRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/resources': typeof AuthenticatedAdminResourcesRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/blog/$slug': typeof PublicBlogSlugRoute
   '/brands/$slug': typeof PublicBrandsSlugRoute
   '/categories/$slug': typeof PublicCategoriesSlugRoute
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
   '/_authenticated/admin/resources': typeof AuthenticatedAdminResourcesRoute
   '/_authenticated/admin/services': typeof AuthenticatedAdminServicesRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_public/blog/$slug': typeof PublicBlogSlugRoute
   '/_public/brands/$slug': typeof PublicBrandsSlugRoute
   '/_public/categories/$slug': typeof PublicCategoriesSlugRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/resources'
     | '/admin/services'
+    | '/admin/users'
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/resources'
     | '/admin/services'
+    | '/admin/users'
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/resources'
     | '/_authenticated/admin/services'
+    | '/_authenticated/admin/users'
     | '/_public/blog/$slug'
     | '/_public/brands/$slug'
     | '/_public/categories/$slug'
@@ -537,6 +549,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminServicesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_public/blog/': {
       id: '/_public/blog/'
       path: '/blog'
@@ -612,6 +631,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
   AuthenticatedAdminResourcesRoute: typeof AuthenticatedAdminResourcesRoute
   AuthenticatedAdminServicesRoute: typeof AuthenticatedAdminServicesRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -624,6 +644,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
   AuthenticatedAdminResourcesRoute: AuthenticatedAdminResourcesRoute,
   AuthenticatedAdminServicesRoute: AuthenticatedAdminServicesRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
