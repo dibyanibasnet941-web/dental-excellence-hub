@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/app-client";
@@ -20,7 +20,6 @@ export const Route = createFileRoute("/_authenticated/admin-setup")({
 type Status = { email: string; adminCount: number; isAdmin: boolean };
 
 function AdminSetup() {
-  const navigate = useNavigate();
   const [status, setStatus] = useState<Status | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
