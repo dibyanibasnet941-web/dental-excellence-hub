@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { ShieldCheck } from "lucide-react";
+import { CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/app-client";
 import { claimAdminRole, getAdminSetupStatus } from "@/lib/admin-setup.functions";
 import { Button } from "@/components/ui/button";
@@ -98,28 +98,58 @@ function AdminSetup() {
 
         {status && (
           <div className="mt-6 space-y-4">
-            <p className="text-sm">
-              Signed in as <span className="font-medium">{status.email}</span>
-            </p>
+            <div className="rounded-sm border border-border bg-surface p-4 text-sm">
+              <p>
+                Signed in as <span className="font-medium">{status.email}</span>
+              </p>
+              <p className="mt-2 flex items-center gap-2">
+                Role status:
+                {status.isAdmin ? (
+                  <span className="inline-flex items-center gap-1 font-medium text-primary">
+                    <CheckCircle2 className="h-4 w-4" /> Admin
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 font-medium text-destructive">
+                    <XCircle className="h-4 w-4" /> Not an admin
+                  </span>
+                )}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {status.adminCount} administrator{status.adminCount === 1 ? "" : "s"} on this
+                backend.
+              </p>
+            </div>
+
+            {justGranted && (
+              <p className="rounded-sm border border-primary/40 bg-primary/10 p-3 text-sm">
+                Success — your account now has the admin role. You have full access to the
+                dashboard.
+              </p>
+            )}
+
             {status.isAdmin ? (
-              <>
-                <p className="text-sm text-muted-foreground">
-                  This account already has the admin role.
-                </p>
-                <Button asChild className="w-full">
-                  <Link to={"/admin" as never}>Open dashboard</Link>
-                </Button>
-              </>
+              <Button asChild className="w-full">
+                <Link to={"/admin" as never}>Open dashboard</Link>
+              </Button>
             ) : status.adminCount > 0 ? (
               <p className="text-sm text-muted-foreground">
                 An administrator already exists. Ask them to grant your account staff or admin
-                access from the dashboard.
+                access from the User Roles page in the dashboard.
               </p>
             ) : (
               <Button className="w-full" disabled={busy} onClick={() => void claim()}>
                 {busy ? "Granting access…" : "Make me admin"}
               </Button>
             )}
+
+            <Button
+              variant="outline"
+              className="w-full"
+              disabled={checking}
+              onClick={() => void refresh()}
+            >
+              {checking ? "Checking…" : "Re-check my role"}
+            </Button>
           </div>
         )}
       </div>
