@@ -49,8 +49,11 @@ function AdminLayout() {
             You are signed in as {user?.email}, but this account does not have a staff or admin role
             yet. An administrator can grant access from the backend user roles table.
           </p>
+          <Button asChild className="mt-6 w-full">
+            <Link to={"/admin-setup" as never}>Run admin setup</Link>
+          </Button>
           <Button
-            className="mt-6"
+            className="mt-3 w-full"
             variant="outline"
             onClick={async () => {
               await supabase.auth.signOut();
