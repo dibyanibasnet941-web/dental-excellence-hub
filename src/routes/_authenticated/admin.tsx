@@ -8,6 +8,7 @@ import {
   LogOut,
   Settings,
   Tag,
+  Users,
   Wrench,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/app-client";
@@ -29,6 +30,7 @@ const links: { to: string; label: string; icon: typeof LayoutDashboard; exact?: 
   { to: "/admin/resources", label: "Resources", icon: FileText },
   { to: "/admin/services", label: "Services & Solutions", icon: Wrench },
   { to: "/admin/content", label: "Website Content", icon: Settings },
+  { to: "/admin/users", label: "User Roles", icon: Users },
 ];
 
 function AdminLayout() {
