@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Building2, Check } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/site/PageHeader";
-import equipmentImage from "@/assets/equipment.jpg";
+import partnerLogos from "@/assets/partner-logos.jpg";
 import { defaultBrandLogos } from "@/lib/brandLogos";
 import { brandsQuery, categoriesQuery, productsQuery } from "@/lib/queries";
 import type { Database } from "@/integrations/supabase/types";
@@ -57,7 +57,7 @@ function BrandsPage() {
         title="Brands"
         description="The manufacturers and suppliers behind the products in our catalogue."
         crumbs={[{ label: "Brands" }]}
-        backgroundImage={equipmentImage}
+        backgroundImage={partnerLogos}
       />
 
       <section className="container-page py-14">
