@@ -54,7 +54,7 @@ function BrandsPage() {
     <>
       <PageHeader
         eyebrow="Partners"
-        title="Brands Test"
+        title="Brands"
         description="The manufacturers and suppliers behind the products in our catalogue."
         crumbs={[{ label: "Brands" }]}
         backgroundImage={partnerLogos}
