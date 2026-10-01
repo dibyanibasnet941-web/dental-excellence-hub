@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Building2, Check } from "lucide-react";
@@ -35,7 +35,10 @@ export const Route = createFileRoute("/_public/brands/")({
   component: BrandsPage,
 });
 
-type Brand = Database["public"]["Tables"]["brands"]["Row"];
+type Brand = Pick<
+  Database["public"]["Tables"]["brands"]["Row"],
+  "id" | "name" | "slug" | "logo_url" | "country" | "description" | "sort_order"
+>;
 
 function getBrandLogo(brand: Brand) {
   return brand.logo_url ?? defaultBrandLogos[brand.slug];
@@ -190,7 +193,7 @@ function FilterChip({
 }: {
   active: boolean;
   onClick: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <button

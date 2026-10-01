@@ -80,17 +80,18 @@ function HomePage() {
   const { get } = useSiteContent();
 
   const categories = useQuery(categoriesQuery);
-  const products = useQuery(productsQuery);
+  const products = useQuery(productsQuery());
   const brands = useQuery(brandsQuery);
   const solutions = useQuery(solutionsQuery);
 
   const [categorySlide, setCategorySlide] = useState(0);
 
-  const featured = ((products.data ?? []) as ProductRow[])
-    .filter((p) => p.is_featured)
-    .slice(0, 4);
+  const featured = ((products.data?.products ?? []) as ProductRow[])
+  .filter((p) => p.is_featured)
+  .slice(0, 4);
 
-  const latest = ((products.data ?? []) as ProductRow[]).slice(0, 4);
+const latest = ((products.data?.products ?? []) as ProductRow[])
+  .slice(0, 4);
 
   const showcase = featured.length > 0 ? featured : latest;
 
@@ -343,15 +344,15 @@ function HomePage() {
             <div className="px-5 py-8 text-center sm:px-8 md:py-10">
 
               <div className="text-3xl font-bold tracking-tight text-[#102A43] md:text-4xl">
-                {get(
-                  "stats.products_count",
-                  String(products.data?.length ?? 0),
-                )}
-              </div>
+  {get(
+    "stats.products_count",
+    String(products.data?.total ?? 0),
+  )}
+</div>
 
-              <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Products
-              </p>
+<p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+  Products
+</p>
 
             </div>
 
@@ -464,14 +465,15 @@ function HomePage() {
 
                   const image = getCategoryImage(category.slug);
 
-                  const productCount = (
-                    (products.data ?? []) as {
-                      category_id: string | null;
-                    }[]
+                  
+                   const productCount = (
+                      (products.data?.products ?? []) as {
+                        category_id: string | null;
+                      }[]
                   ).filter(
                     (product) =>
                       product.category_id === category.id,
-                  ).length;
+                   ).length;
 
                   return (
 

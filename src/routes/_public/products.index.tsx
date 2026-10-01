@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -14,7 +14,7 @@ import {
 import productImage from "@/assets/product.jpg";
 
 import { PageHeader } from "@/components/site/PageHeader";
-import { ProductCard, type ProductRow } from "@/components/site/ProductCard";
+import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -101,141 +101,68 @@ const PAGE_SIZE = 12;
 
 function ProductsPage() {
   const search = Route.useSearch();
-  const navigate = Route.useNavigate();
+const navigate = Route.useNavigate();
 
-  const products = useQuery(productsQuery);
-  const categories = useQuery(categoriesQuery);
-  const brands = useQuery(brandsQuery);
+const pageSize = PAGE_SIZE;
+const currentPage = search.page ?? 1;
 
-  const [term, setTerm] = useState(search.q ?? "");
-  const [availability, setAvailability] = useState<string[]>([]);
+const [term, setTerm] = useState(search.q ?? "");
+const [availability, setAvailability] = useState<string[]>([]);
 
-  const [flags, setFlags] = useState<{
-    featured: boolean;
-    isNew: boolean;
-  }>({
-    featured: false,
-    isNew: false,
-  });
-
-  const [sort, setSort] = useState("newest");
-  const [page, setPage] = useState(search.page ?? 1);
-
-  const categorySlug = search.category;
-  const brandSlug = search.brand;
-
-  const filtered = useMemo(() => {
-    const q = term.trim().toLowerCase();
-
-    let rows = (
-      (products.data ?? []) as (ProductRow & {
-        created_at: string;
-        category_id: string | null;
-        brand_id: string | null;
-      })[]
-    ).slice();
-
-    if (categorySlug) {
-      rows = rows.filter(
-        (p) => p.categories?.slug === categorySlug,
-      );
-    }
-
-    if (brandSlug) {
-      rows = rows.filter(
-        (p) => p.brands?.slug === brandSlug,
-      );
-    }
-
-    if (availability.length > 0) {
-      rows = rows.filter((p) =>
-        availability.includes(p.availability),
-      );
-    }
-
-    if (flags.featured) {
-      rows = rows.filter((p) => p.is_featured);
-    }
-
-    if (flags.isNew) {
-      rows = rows.filter((p) => p.is_new);
-    }
-
-    if (q) {
-      rows = rows.filter((p) =>
-        [
-          p.name,
-          p.sku,
-          p.short_description,
-          p.brands?.name,
-          p.categories?.name,
-        ]
-          .filter(Boolean)
-          .some((value) =>
-            String(value).toLowerCase().includes(q),
-          ),
-      );
-    }
-
-    rows.sort((a, b) => {
-  if (sort === "name") {
-    return a.name.localeCompare(b.name);
-  }
-
-  if (sort === "oldest") {
-    return a.created_at.localeCompare(b.created_at);
-  }
-
-  if (sort === "newest") {
-    if (a.is_featured !== b.is_featured) {
-      return Number(b.is_featured) - Number(a.is_featured);
-    }
-
-    if (a.is_new !== b.is_new) {
-      return Number(b.is_new) - Number(a.is_new);
-    }
-
-    return b.created_at.localeCompare(a.created_at);
-  }
-
-  return 0;
+const [flags, setFlags] = useState<{
+  featured: boolean;
+  isNew: boolean;
+}>({
+  featured: false,
+  isNew: false,
 });
-    return rows;
-  }, [
-    products.data,
-    term,
-    categorySlug,
-    brandSlug,
-    availability,
-    flags,
-    sort,
-  ]);
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filtered.length / PAGE_SIZE),
-  );
+const [sort, setSort] = useState("newest");
 
-  const current = Math.min(page, totalPages);
+const categorySlug = search.category;
+const brandSlug = search.brand;
 
-  const pageRows = filtered.slice(
-    (current - 1) * PAGE_SIZE,
-    current * PAGE_SIZE,
-  );
+const products = useQuery(
+  productsQuery({
+    page: currentPage,
+    pageSize: PAGE_SIZE,
+    ...(search.q ? { search: search.q } : {}),
+    ...(categorySlug ? { category: categorySlug } : {}),
+    ...(brandSlug ? { brand: brandSlug } : {}),
+    ...(availability.length > 0 ? { availability } : {}),
+    ...(flags.featured ? { featured: true } : {}),
+    ...(flags.isNew ? { isNew: true } : {}),
+    ...(sort ? { sort } : {}),
+  }),
+);
+
+const categories = useQuery(categoriesQuery);
+const brands = useQuery(brandsQuery);
+
+const totalProducts = products.data?.total ?? 0;
+
+const totalPages = Math.max(
+  1,
+  Math.ceil(totalProducts / PAGE_SIZE),
+);
+
+const current = Math.min(currentPage, totalPages);
+
+const pageRows = products.data?.products ?? [];
+ 
 
   const setFilter = (
-    key: "category" | "brand",
-    value: string,
-  ) => {
-    setPage(1);
-
-    void navigate({
-      search: (prev) => ({
-        ...prev,
-        [key]: value === "all" ? undefined : value,
-      }),
-    });
-  };
+  key: "category" | "brand",
+  value: string,
+) => {
+  void navigate({
+    search: (prev) => ({
+      ...prev,
+      [key]: value === "all" ? undefined : value,
+      page: 1,
+    }),
+  });
+};
 
   const activeFilterCount =
     (categorySlug ? 1 : 0) +
@@ -332,8 +259,6 @@ function ProductsPage() {
                   option.value,
                 )}
                 onCheckedChange={(checked) => {
-                  setPage(1);
-
                   setAvailability((prev) =>
                     checked
                       ? [...prev, option.value]
@@ -451,10 +376,19 @@ function ProductsPage() {
                   id="product-search"
                   placeholder="Search products, brands or product codes…"
                   value={term}
-                  onChange={(e) => {
-                    setTerm(e.target.value);
-                    setPage(1);
-                  }}
+                 onChange={(e) => {
+                  const value = e.target.value;
+
+                  setTerm(value);
+
+                 void navigate({
+                  search: (prev) => ({
+                    ...prev,
+                    q: value || undefined,
+                    page: 1,
+                  }),
+                });
+              }}
                   className="border-transparent bg-background pl-10 shadow-none focus-visible:border-input"
                 />
               </div>
@@ -520,10 +454,10 @@ function ProductsPage() {
           <div className="mt-6 flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
               <span className="font-medium text-foreground">
-                {filtered.length}
+                {totalProducts}
               </span>{" "}
               product
-              {filtered.length === 1 ? "" : "s"}
+              {totalProducts === 1 ? "" : "s"}
               {activeFilterCount > 0 ? " · filtered" : ""}
             </p>
 
@@ -587,9 +521,16 @@ function ProductsPage() {
                   size="sm"
                   className="gap-1.5"
                   disabled={current === 1}
+                  
                   onClick={() =>
-                    setPage(current - 1)
-                  }
+                  void navigate({
+                   search: (prev) => ({
+                   ...prev,
+                  page: current - 1,
+                }),
+              })
+            }
+
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Previous
@@ -611,8 +552,13 @@ function ProductsPage() {
                     current === totalPages
                   }
                   onClick={() =>
-                    setPage(current + 1)
-                  }
+                   void navigate({
+                     search: (prev) => ({
+                      ...prev,
+                      page: current + 1,
+                }),
+            })
+         }
                 >
                   Next
                   <ChevronRight className="h-4 w-4" />

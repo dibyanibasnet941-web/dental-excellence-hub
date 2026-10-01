@@ -18,12 +18,23 @@ export const brandsQuery = queryOptions({
   queryFn: async () => {
     const { data, error } = await supabase
       .from("brands")
-      .select("*")
+      .select(`
+        id,
+        name,
+        slug,
+        logo_url,
+        country,
+        description,
+        sort_order
+      `)
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true });
+
     if (error) throw error;
     return data ?? [];
   },
+  staleTime: 5 * 60 * 1000,
+  gcTime: 30 * 60 * 1000,
 });
 
 export const solutionsQuery = queryOptions({
@@ -121,65 +132,149 @@ export const PRODUCT_SELECT = `
   brands(name, slug)
 `;
 
-export const productsQuery = queryOptions({
-  queryKey: ["products"],
-  queryFn: async () => {
-    const { data, error } = await supabase
-      .from("products")
-      .select(PRODUCT_CARD_SELECT)
-      .eq("is_published", true)
-      .order("is_featured", { ascending: false })
-      .order("is_new", { ascending: false })
-      .order("created_at", { ascending: false });
+type ProductsQueryOptions = {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  category?: string;
+  brand?: string;
+  availability?: string[];
+  featured?: boolean;
+  isNew?: boolean;
+  sort?: string;
+};
 
-    if (error) throw error;
-    return data ?? [];
-  },
-  staleTime: 5 * 60 * 1000,
-  gcTime: 30 * 60 * 1000,
-});
+export function productsQuery(options: ProductsQueryOptions = {}) {
+  const page = options?.page ?? 1;
+  const pageSize = options?.pageSize ?? 12;
 
-export function productBySlugQuery(slug: string) {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const search = options?.search?.trim() ?? "";
+  const category = options?.category;
+  const brand = options?.brand;
+  const availability = options?.availability ?? [];
+  const featured = options?.featured ?? false;
+  const isNew = options?.isNew ?? false;
+  const sort = options?.sort ?? "newest";
+
   return queryOptions({
-    queryKey: ["product", slug],
+    queryKey: [
+      "products",
+      page,
+      pageSize,
+      search,
+      category,
+      brand,
+      availability,
+      featured,
+      isNew,
+      sort,
+    ],
+
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("products")
-        .select(`${PRODUCT_SELECT}, product_images(*), product_specifications(*)`)
-        .eq("slug", slug)
-        .maybeSingle();
+        .select(PRODUCT_CARD_SELECT, { count: "exact" });
+
+      // Search
+      if (search) {
+        const escaped = search.replace(/[%_]/g, "\\$&");
+
+        query = query.or(
+          `name.ilike.%${escaped}%,sku.ilike.%${escaped}%,short_description.ilike.%${escaped}%`,
+        );
+      }
+
+      // Category
+      if (category) {
+        const { data: categoryRow, error: categoryError } =
+          await supabase
+            .from("categories")
+            .select("id")
+            .eq("slug", category)
+            .maybeSingle();
+
+        if (categoryError) throw categoryError;
+
+        if (!categoryRow) {
+          return {
+            products: [],
+            total: 0,
+          };
+        }
+
+        query = query.eq("category_id", categoryRow.id);
+      }
+
+      // Brand
+      if (brand) {
+        const { data: brandRow, error: brandError } =
+          await supabase
+            .from("brands")
+            .select("id")
+            .eq("slug", brand)
+            .maybeSingle();
+
+        if (brandError) throw brandError;
+
+        if (!brandRow) {
+          return {
+            products: [],
+            total: 0,
+          };
+        }
+
+        query = query.eq("brand_id", brandRow.id);
+      }
+
+      // Availability
+      if (availability.length > 0) {
+        query = query.in("availability", availability);
+      }
+
+      // Featured
+      if (featured) {
+        query = query.eq("is_featured", true);
+      }
+
+      // New
+      if (isNew) {
+        query = query.eq("is_new", true);
+      }
+
+      // Sorting
+      if (sort === "name") {
+        query = query
+          .order("name", { ascending: true })
+          .order("id", { ascending: true });
+      } else if (sort === "oldest") {
+        query = query
+          .order("created_at", { ascending: true })
+          .order("id", { ascending: true });
+      } else {
+        query = query
+          .order("is_featured", { ascending: false })
+          .order("is_new", { ascending: false })
+          .order("created_at", { ascending: false })
+          .order("id", { ascending: true });
+      }
+
+      const { data, error, count } = await query.range(from, to);
+
       if (error) throw error;
-      return data;
+
+      return {
+        products: data ?? [],
+        total: count ?? 0,
+      };
     },
+
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 }
-
-export function blogPostBySlugQuery(slug: string) {
-  return queryOptions({
-    queryKey: ["blog_post", slug],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("blog_posts")
-        .select("*, blog_categories(name, slug)")
-        .eq("slug", slug)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
-}
-
-export const enquiriesQuery = queryOptions({
-  queryKey: ["enquiries"],
-  queryFn: async () => {
-    const { data, error } = await supabase
-      .from("enquiries")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return data ?? [];
-  },
-});
 export const brandProductCountsQuery = queryOptions({
   queryKey: ["brand_product_counts"],
   queryFn: async () => {
