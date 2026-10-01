@@ -290,3 +290,44 @@ export const brandProductCountsQuery = queryOptions({
   staleTime: 5 * 60 * 1000,
   gcTime: 30 * 60 * 1000,
 });
+export const blogPostBySlugQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["blog_post", slug],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("*, blog_categories(name, slug)")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+export const enquiriesQuery = queryOptions({
+  queryKey: ["enquiries"],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("enquiries")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return data ?? [];
+  },
+});
+export const productBySlugQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["product", slug],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select(PRODUCT_SELECT)
+        .eq("slug", slug)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
