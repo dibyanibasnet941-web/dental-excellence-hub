@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -118,6 +118,15 @@ const [flags, setFlags] = useState<{
 });
 
 const [sort, setSort] = useState("newest");
+useEffect(() => {
+  if (term === (search.q ?? "")) return;
+  const t = setTimeout(() => {
+    void navigate({
+      search: (prev) => ({ ...prev, q: term || undefined, page: 1 }),
+    });
+  }, 400);
+  return () => clearTimeout(t);
+}, [term]);
 
 const categorySlug = search.category;
 const brandSlug = search.brand;
@@ -376,19 +385,8 @@ const pageRows = products.data?.products ?? [];
                   id="product-search"
                   placeholder="Search products, brands or product codes…"
                   value={term}
-                 onChange={(e) => {
-                  const value = e.target.value;
-
-                  setTerm(value);
-
-                 void navigate({
-                  search: (prev) => ({
-                    ...prev,
-                    q: value || undefined,
-                    page: 1,
-                  }),
-                });
-              }}
+                 onChange={(e) => setTerm(e.target.value)}
+                 
                   className="border-transparent bg-background pl-10 shadow-none focus-visible:border-input"
                 />
               </div>

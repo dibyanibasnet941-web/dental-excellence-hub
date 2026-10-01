@@ -176,7 +176,8 @@ export function productsQuery(options: ProductsQueryOptions = {}) {
     queryFn: async () => {
       let query = supabase
         .from("products")
-        .select(PRODUCT_CARD_SELECT, { count: "exact" });
+        .select(PRODUCT_CARD_SELECT, { count: "exact" })
+        .eq("is_published", true);
 
       // Search
       if (search) {
