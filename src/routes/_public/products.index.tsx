@@ -178,17 +178,28 @@ function ProductsPage() {
     }
 
     rows.sort((a, b) => {
-      if (sort === "name") {
-        return a.name.localeCompare(b.name);
-      }
+  if (sort === "name") {
+    return a.name.localeCompare(b.name);
+  }
 
-      if (sort === "oldest") {
-        return a.created_at.localeCompare(b.created_at);
-      }
+  if (sort === "oldest") {
+    return a.created_at.localeCompare(b.created_at);
+  }
 
-      return b.created_at.localeCompare(a.created_at);
-    });
+  if (sort === "newest") {
+    if (a.is_featured !== b.is_featured) {
+      return Number(b.is_featured) - Number(a.is_featured);
+    }
 
+    if (a.is_new !== b.is_new) {
+      return Number(b.is_new) - Number(a.is_new);
+    }
+
+    return b.created_at.localeCompare(a.created_at);
+  }
+
+  return 0;
+});
     return rows;
   }, [
     products.data,
@@ -461,7 +472,7 @@ function ProductsPage() {
 
                 <SelectContent>
                   <SelectItem value="newest">
-                    Newest first
+                    Featured & New first
                   </SelectItem>
 
                   <SelectItem value="oldest">
@@ -556,14 +567,10 @@ function ProductsPage() {
           ) : (
             /* Product Grid */
             <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {pageRows.map((product, i) => (
+              {pageRows.map((product) => (
                 <div
                   key={product.id}
-                  className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both transition-transform duration-300 hover:-translate-y-1"
-                  style={{
-                    animationDuration: "500ms",
-                    animationDelay: `${Math.min(i, 8) * 45}ms`,
-                  }}
+                  className="transition-transform duration-300 hover:-translate-y-1"
                 >
                   <ProductCard product={product} />
                 </div>

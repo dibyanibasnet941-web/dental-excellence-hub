@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Building2, Check } from "lucide-react";
+import {
+  brandsQuery,
+  categoriesQuery,
+  brandProductCountsQuery,
+} from "@/lib/queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/site/PageHeader";
 import partnerLogos from "@/assets/partner-logos.jpg";
 import { defaultBrandLogos } from "@/lib/brandLogos";
-import { brandsQuery, categoriesQuery, productsQuery } from "@/lib/queries";
 import type { Database } from "@/integrations/supabase/types";
 import { cn } from "@/lib/utils";
 
@@ -39,9 +43,23 @@ function getBrandLogo(brand: Brand) {
 
 function BrandsPage() {
   const brands = useQuery(brandsQuery);
-  const products = useQuery(productsQuery);
+  const products = useQuery(brandProductCountsQuery);
   const categories = useQuery(categoriesQuery);
   const [filter, setFilter] = useState("all");
+  const productCounts = useMemo(() => {
+  const counts = new Map<string, number>();
+
+  for (const product of products.data ?? []) {
+    if (!product.brand_id) continue;
+
+    counts.set(
+      product.brand_id,
+      (counts.get(product.brand_id) ?? 0) + 1,
+    );
+  }
+
+  return counts;
+}, [products.data]);
 
   const rows = (brands.data ?? []).filter((brand) => {
     if (filter === "all") return true;

@@ -95,18 +95,48 @@ export const siteContentQuery = queryOptions({
   },
 });
 
-export const PRODUCT_SELECT = "*, categories(name, slug), brands(name, slug)";
+export const PRODUCT_CARD_SELECT = `
+  id,
+  name,
+  slug,
+  sku,
+  short_description,
+  image_url,
+  availability,
+  price,
+  currency,
+  show_price,
+  is_featured,
+  is_new,
+  created_at,
+  brand_id,
+  category_id,
+  categories(name, slug),
+  brands(name, slug)
+`;
+
+export const PRODUCT_SELECT = `
+  *,
+  categories(name, slug),
+  brands(name, slug)
+`;
 
 export const productsQuery = queryOptions({
   queryKey: ["products"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("products")
-      .select(PRODUCT_SELECT)
+      .select(PRODUCT_CARD_SELECT)
+      .eq("is_published", true)
+      .order("is_featured", { ascending: false })
+      .order("is_new", { ascending: false })
       .order("created_at", { ascending: false });
+
     if (error) throw error;
     return data ?? [];
   },
+  staleTime: 5 * 60 * 1000,
+  gcTime: 30 * 60 * 1000,
 });
 
 export function productBySlugQuery(slug: string) {
@@ -149,4 +179,18 @@ export const enquiriesQuery = queryOptions({
     if (error) throw error;
     return data ?? [];
   },
+});
+export const brandProductCountsQuery = queryOptions({
+  queryKey: ["brand_product_counts"],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("brand_id, category_id, categories(slug)");
+
+    if (error) throw error;
+
+    return data ?? [];
+  },
+  staleTime: 5 * 60 * 1000,
+  gcTime: 30 * 60 * 1000,
 });

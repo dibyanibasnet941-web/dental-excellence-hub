@@ -36,6 +36,7 @@ export function ProductCard({ product }: { product: ProductRow }) {
             src={product.image_url}
             alt={product.name}
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             onError={(event) => {
               // The seeded MELAG image is no longer available from Unsplash.

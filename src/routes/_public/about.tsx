@@ -330,7 +330,7 @@ function AboutPage() {
 
                 <div>
                   <p className="text-lg font-bold text-foreground">
-                    Umesh Agarwal
+                    Umesh Agrawal
                   </p>
 
                   <p className="mt-1 text-sm text-muted-foreground">
