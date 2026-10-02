@@ -1,5 +1,7 @@
+
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
 
 export const categoriesQuery = queryOptions({
   queryKey: ["categories"],
@@ -331,3 +333,4 @@ export const productBySlugQuery = (slug: string) =>
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
+  

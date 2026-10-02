@@ -64,12 +64,18 @@ function BrandsPage() {
   return counts;
 }, [products.data]);
 
-  const rows = (brands.data ?? []).filter((brand) => {
+   const rows = (brands.data ?? [])
+  .filter((brand) => {
     if (filter === "all") return true;
     return ((products.data ?? []) as { brand_id: string | null; categories?: { slug: string } | null }[]).some(
       (p) => p.brand_id === brand.id && p.categories?.slug === filter,
     );
-  });
+  })
+  .sort(
+    (a, b) =>
+      (productCounts.get(b.id) ?? 0) - (productCounts.get(a.id) ?? 0) ||
+      a.name.localeCompare(b.name),
+  );
 
   return (
     <>
@@ -117,11 +123,7 @@ function BrandsPage() {
               <BrandCard
                 key={brand.id}
                 brand={brand}
-                productCount={
-                  ((products.data ?? []) as { brand_id: string | null }[]).filter(
-                    (p) => p.brand_id === brand.id,
-                  ).length
-                }
+                productCount={productCounts.get(brand.id) ?? 0}
               />
             ))}
           </div>
