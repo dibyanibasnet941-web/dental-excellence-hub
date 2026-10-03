@@ -8,6 +8,8 @@ export function PageHeader({
   crumbs,
   children,
   backgroundImage,
+  tall = false,
+  imagePosition = "center",
 }: {
   eyebrow?: string;
   title: string;
@@ -15,55 +17,48 @@ export function PageHeader({
   crumbs?: Crumb[];
   children?: ReactNode;
   backgroundImage?: string;
+  tall?: boolean;
+  imagePosition?: string;
 }) {
   const hasBackgroundImage = Boolean(backgroundImage);
+  const heightClass = tall
+    ? "min-h-[520px] md:min-h-[640px]"
+    : "min-h-[400px] md:min-h-[450px]";
 
   return (
     <section
       className={`relative overflow-hidden border-b ${
         hasBackgroundImage
-          ? "min-h-[400px] border-slate-200 bg-slate-900 md:min-h-[450px]"
+          ? `${heightClass} border-slate-200 bg-slate-900`
           : "border-slate-200 bg-slate-50"
       }`}
     >
-      {/* =====================================================
-          BACKGROUND IMAGE
-      ====================================================== */}
       {backgroundImage && (
         <>
           <img
             src={backgroundImage}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: imagePosition }}
           />
 
-          {/* Soft overlay */}
-          <div className="absolute inset-0 bg-slate-950/45" />
+          <div className="absolute inset-0 bg-slate-950/30" />
 
-          {/* Gradient for text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/70 via-slate-950/35 to-transparent" />
 
-          {/* Bottom fade */}
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/30 to-transparent" />
         </>
       )}
 
-      {/* =====================================================
-          CONTENT
-      ====================================================== */}
       <div
         className={
           hasBackgroundImage
-            ? "container-page relative flex min-h-[400px] items-center py-12 md:min-h-[450px] md:py-16"
+            ? `container-page relative flex ${heightClass} items-center py-12 md:py-16`
             : "container-page relative py-8 md:py-10"
         }
       >
         <div className="w-full max-w-4xl">
-
-          {/* =================================================
-              BREADCRUMBS
-          ================================================== */}
           {crumbs && (
             <div
               className={
@@ -76,9 +71,6 @@ export function PageHeader({
             </div>
           )}
 
-          {/* =================================================
-              EYEBROW
-          ================================================== */}
           {eyebrow && (
             <div className="mt-7 flex items-center gap-3">
               <span
@@ -101,9 +93,6 @@ export function PageHeader({
             </div>
           )}
 
-          {/* =================================================
-              TITLE
-          ================================================== */}
           <h1
             className={
               hasBackgroundImage
@@ -114,9 +103,6 @@ export function PageHeader({
             {title}
           </h1>
 
-          {/* =================================================
-              DESCRIPTION
-          ================================================== */}
           {description && (
             <p
               className={
@@ -129,14 +115,7 @@ export function PageHeader({
             </p>
           )}
 
-          {/* =================================================
-              OPTIONAL CHILDREN
-          ================================================== */}
-          {children && (
-            <div className="mt-6">
-              {children}
-            </div>
-          )}
+          {children && <div className="mt-6">{children}</div>}
         </div>
       </div>
     </section>

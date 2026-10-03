@@ -341,6 +341,8 @@ const pageRows = products.data?.products ?? [];
         description="Equipment, instruments, consumables and solutions for clinics, hospitals and laboratories."
         crumbs={[{ label: "Products" }]}
         backgroundImage={productImage}
+        tall
+        imagePosition="center 40%"
       />
 
       {/* =========================================================

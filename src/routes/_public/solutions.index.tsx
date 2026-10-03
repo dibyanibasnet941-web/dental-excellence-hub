@@ -107,6 +107,8 @@ function SolutionsPage() {
         description="Instead of browsing product by product, start from the outcome you need."
         crumbs={[{ label: "Solutions" }]}
         backgroundImage={solutionsHeaderImage}
+        tall
+        imagePosition="center 40%"
       />
 
       {/* Solutions */}
