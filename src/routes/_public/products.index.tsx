@@ -11,7 +11,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
-import productImage from "@/assets/product.jpg";
+import productImage from "@/assets/products-header.jpg";
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { ProductCard } from "@/components/site/ProductCard";

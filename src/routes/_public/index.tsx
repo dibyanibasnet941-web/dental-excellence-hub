@@ -14,6 +14,13 @@ import {
   Bone,
   Syringe,
 } from "lucide-react";
+import {
+  brandsQuery,
+  brandProductCountsQuery,
+  categoriesQuery,
+  productsQuery,
+  solutionsQuery,
+} from "@/lib/queries";
 
 import heroImage from "@/assets/hero-dental.jpg";
 import equipmentImage from "@/assets/equipment.jpg";
@@ -31,13 +38,6 @@ import {
   type ProductRow,
 } from "@/components/site/ProductCard";
 import { useSiteContent } from "@/hooks/useSiteContent";
-
-import {
-  brandsQuery,
-  categoriesQuery,
-  productsQuery,
-  solutionsQuery,
-} from "@/lib/queries";
 
 import { defaultBrandLogos } from "@/lib/brandLogos";
 
@@ -83,6 +83,7 @@ function HomePage() {
   const products = useQuery(productsQuery());
   const brands = useQuery(brandsQuery);
   const solutions = useQuery(solutionsQuery);
+  const counts = useQuery(brandProductCountsQuery);
 
   const [categorySlide, setCategorySlide] = useState(0);
 
@@ -465,14 +466,8 @@ const latest = ((products.data?.products ?? []) as ProductRow[])
 
                   const image = getCategoryImage(category.slug);
 
-                  
-                   const productCount = (
-                      (products.data?.products ?? []) as {
-                        category_id: string | null;
-                      }[]
-                  ).filter(
-                    (product) =>
-                      product.category_id === category.id,
+                  const productCount = (counts.data ?? []).filter(
+                     (row) => row.category_id === category.id,
                    ).length;
 
                   return (

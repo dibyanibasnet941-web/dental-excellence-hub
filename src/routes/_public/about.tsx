@@ -13,8 +13,6 @@ import {
   Building2,
   BriefcaseMedical,
 } from "lucide-react";
-
-import heroImage from "@/assets/hero.png";
 import missionImage from "@/assets/mission.png";
 import directorImage from "@/assets/director.png";
 import customerImage from "@/assets/customer.png";
@@ -156,12 +154,6 @@ function AboutPage() {
           HERO
       ====================================================== */}
       <section className="relative min-h-[620px] overflow-hidden bg-[#031B43]">
-        <img
-          src={heroImage}
-          alt="Garg Dental Pvt. Ltd."
-          loading="eager"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] hover:scale-[1.02]"
-        />
 
         {/* Premium image treatment */}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,27,67,0.96)_0%,rgba(3,27,67,0.82)_38%,rgba(3,27,67,0.35)_72%,rgba(3,27,67,0.15)_100%)]" />

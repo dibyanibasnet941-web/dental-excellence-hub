@@ -14,7 +14,7 @@ import {
 
 import { PageHeader } from "@/components/site/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
-import sterilizationImage from "@/assets/sterilization.jpg";
+import solutionsHeaderImage from "@/assets/solutions-header.jpg";
 import { solutionsQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_public/solutions/")({
@@ -106,7 +106,7 @@ function SolutionsPage() {
         title="Solutions for every part of your practice"
         description="Instead of browsing product by product, start from the outcome you need."
         crumbs={[{ label: "Solutions" }]}
-        backgroundImage={sterilizationImage}
+        backgroundImage={solutionsHeaderImage}
       />
 
       {/* Solutions */}
