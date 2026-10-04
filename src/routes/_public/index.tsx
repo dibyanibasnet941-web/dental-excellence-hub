@@ -35,6 +35,7 @@ import preventiveImage from "@/assets/preventive-dentistry.jpg";
 import dentalChairImage from "@/assets/dental-chair.jpg";
 import orthodonticsImage from "@/assets/orthodontics.jpg";
 import oralSurgeryImage from "@/assets/oral-surgery.jpg";
+import implantologyImage from "@/assets/implantology.jpg";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -128,6 +129,7 @@ const latest = ((products.data?.products ?? []) as ProductRow[])
     "dental-chair": dentalChairImage,
     orthodontics: orthodonticsImage,
     "oral-surgery": oralSurgeryImage,
+    implantology: implantologyImage,
   };
 
   const getCategoryImage = (slug: string) => {
