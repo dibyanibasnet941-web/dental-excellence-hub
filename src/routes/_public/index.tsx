@@ -29,6 +29,12 @@ import consumableImage from "@/assets/consumable.jpg";
 import infectionImage from "@/assets/infection.jpg";
 import sterilizationImage from "@/assets/sterilization.jpg";
 import radiologyImage from "@/assets/radiology.jpg";
+import laboratoryImage from "@/assets/laboratory.jpg";
+import endodonticsImage from "@/assets/endodontics.jpg";
+import preventiveImage from "@/assets/preventive-dentistry.jpg";
+import dentalChairImage from "@/assets/dental-chair.jpg";
+import orthodonticsImage from "@/assets/orthodontics.jpg";
+import oralSurgeryImage from "@/assets/oral-surgery.jpg";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -116,28 +122,35 @@ const latest = ((products.data?.products ?? []) as ProductRow[])
     sterilization: sterilizationImage,
 
     radiology: radiologyImage,
+    laboratory: laboratoryImage,
+    endodontics: endodonticsImage,
+    "preventive-dentistry": preventiveImage,
+    "dental-chair": dentalChairImage,
+    orthodontics: orthodonticsImage,
+    "oral-surgery": oralSurgeryImage,
   };
 
   const getCategoryImage = (slug: string) => {
     return categoryImages[slug.toLowerCase()];
   };
 
-  const homeCategories = (categories.data ?? [])
-    .filter((category) =>
-      [
-        "dental-equipment",
-        "equipment",
-        "dental-instruments",
-        "instruments",
-        "dental-consumables",
-        "consumables",
-        "infection-control",
-        "infection",
-        "sterilization",
-        "radiology",
-      ].includes(category.slug.toLowerCase()),
-    )
-    .slice(0, 6);
+  const countByCategory = new Map<string, number>();
+  for (const row of counts.data ?? []) {
+  if (row.category_id) {
+    countByCategory.set(
+      row.category_id,
+      (countByCategory.get(row.category_id) ?? 0) + 1,
+    );
+  }
+}
+
+const homeCategories = [...(categories.data ?? [])]
+  .sort(
+    (a, b) =>
+      (countByCategory.get(b.id) ?? 0) - (countByCategory.get(a.id) ?? 0) ||
+      a.name.localeCompare(b.name),
+  )
+  .slice(0, 12);
 
   /* =========================================================
      CATEGORY SLIDER
