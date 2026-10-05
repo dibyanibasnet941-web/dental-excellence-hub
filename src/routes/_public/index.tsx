@@ -703,7 +703,7 @@ const homeCategories = [...(categories.data ?? [])]
 
                 <div
                   key={product.id}
-                  className="transition-transform duration-300 hover:-translate-y-1"
+                  className="h-full transition-transform duration-300 hover:-translate-y-1"
                 >
 
                   <ProductCard product={product} />

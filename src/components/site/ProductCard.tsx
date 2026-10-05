@@ -25,7 +25,7 @@ export type ProductRow = {
 
 export function ProductCard({ product }: { product: ProductRow }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-md border border-border bg-card transition-shadow hover:shadow-elevated">
+    <article className="group flex h-full flex-col overflow-hidden rounded-md border border-border bg-card transition-shadow hover:shadow-elevated">
       <Link
         to="/products/$slug"
         params={{ slug: product.slug }}
@@ -62,7 +62,7 @@ export function ProductCard({ product }: { product: ProductRow }) {
           {product.brands?.name && <span className="font-semibold text-accent">{product.brands.name}</span>}
           {product.categories?.name && <span>{product.categories.name}</span>}
         </div>
-        <h3 className="mt-2 text-base font-semibold leading-snug">
+        <h3 className="mt-2 line-clamp-2 min-h-[2.75rem] text-base font-semibold leading-snug">
           <Link to="/products/$slug" params={{ slug: product.slug }} className="hover:text-accent">
             {product.name}
           </Link>
@@ -83,7 +83,7 @@ export function ProductCard({ product }: { product: ProductRow }) {
           </div>
         </dl>
 
-        <p className="mt-4 text-sm font-semibold">
+        <p className="mt-auto pt-4 text-sm font-semibold">
           {product.show_price && product.price != null
             ? `${product.currency} ${Number(product.price).toLocaleString()}`
             : "Request Price"}
